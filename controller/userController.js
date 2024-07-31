@@ -3562,7 +3562,7 @@ export const ViewOrderByUser = async (req, res) => {
 export const ViewAllZones = async (req, res) => {
   try {
     // Query the database for all ratings where status is 1
-    const Zones = await zonesModel.find({ status: "true" });
+    const Zones = await zonesModel.find({ status: 1 });
 
     res.status(200).json({ success: true, Zones });
   } catch (error) {
