@@ -208,7 +208,7 @@ function checkOrigin(req, res, next) {
     "http://localhost:3000",
     "https://localhost:443",
     "https://localhost:80",
-    "https://taxi.delhiexpert.com",
+    "https://lead.delhiexpert.com",
     "https://localhost:5559",
   ]; // Add your authorized domains here
   const origin = req.headers.origin;
