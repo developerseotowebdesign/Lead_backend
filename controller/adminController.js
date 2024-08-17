@@ -2815,10 +2815,10 @@ export const deleteFolderAdmin = async (req, res) => {
 
 export const AddAdminLeadController = async (req, res) => {
   try {
-    const { PickupLocation, DropLocation, startDate, endDate, count, name, email, phone } = req.body;
+    const { PickupLocation, DropLocation, startDate, endDate, count, name, email, phone, CPC, type } = req.body;
 
     // Validation
-    if (!PickupLocation || !DropLocation || !startDate || !endDate || !count || !name || !email || !phone) {
+    if (!PickupLocation || !DropLocation || !startDate || !endDate || !count || !name || !email || !phone || !CPC || !type) {
       return res.status(400).send({
         success: false,
         message: "Please Provide All Fields",
@@ -2844,7 +2844,7 @@ export const AddAdminLeadController = async (req, res) => {
       startDate,
       endDate,
       count,
-      LeadId, name, email, phone
+      LeadId, name, email, phone, CPC, type
     });
     await newLead.save();
 
@@ -2857,6 +2857,25 @@ export const AddAdminLeadController = async (req, res) => {
     return res.status(400).send({
       success: false,
       message: "Error while creating Leads",
+      error,
+    });
+  }
+};
+
+
+export const deleteLeadAdmin = async (req, res) => {
+  try {
+    await LeadModel.findByIdAndDelete(req.params.id);
+
+    return res.status(200).send({
+      success: true,
+      message: "Lead Deleted!",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send({
+      success: false,
+      message: "Erorr WHile Deleteing Lead",
       error,
     });
   }

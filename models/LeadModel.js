@@ -37,7 +37,11 @@ const LeadSchema = mongoose.Schema(
     ],
     count: {
       type: Number,
-      default: 0,
+      default: 1,
+    },
+    CPC: {
+      type: Number,
+      default: 1,
     },
     name: {
       type: String,

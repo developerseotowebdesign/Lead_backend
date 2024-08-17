@@ -34,6 +34,7 @@ import path from "path";
 import { profile } from "console";
 import valetRideModel from "../models/valetRideModel.js";
 import { type } from "os";
+import LeadModel from "../models/LeadModel.js";
 // import { sendMessage } from "../utils/whatsappClient.js";
 dotenv.config();
 
@@ -184,6 +185,58 @@ export const handleImageCompression = async (req, res, next) => {
 };
 
 
+// for Leads
+
+export const AddAdminLeadController = async (req, res) => {
+  try {
+    const { PickupLocation, DropLocation, startDate, endDate, count, name, email, phone, CPC, type, userId } = req.body;
+
+    // Validation
+    if (!PickupLocation || !DropLocation || !startDate || !endDate || !count || !name || !email || !phone || !CPC || !type) {
+      return res.status(400).send({
+        success: false,
+        message: "Please Provide All Fields",
+      });
+    }
+
+    // Calculate the auto-increment ID
+    const lastLead = await LeadModel.findOne().sort({ _id: -1 }).limit(1);
+    let LeadId;
+
+    if (lastLead) {
+      // Convert lastOrder.orderId to a number before adding 1
+      const lastOrderId = parseInt(lastLead.LeadId);
+      LeadId = lastOrderId + 1;
+    } else {
+      LeadId = 1;
+    }
+
+    // Create a new category with the specified parent
+    const newLead = new LeadModel({
+      PickupLocation,
+      DropLocation,
+      startDate,
+      endDate,
+      count,
+      LeadId, name, email, phone, CPC, type,
+      VendorId: userId
+    });
+    await newLead.save();
+
+    return res.status(200).send({
+      success: true,
+      message: "Leads Creating Successfully!",
+    });
+  } catch (error) {
+    console.error("Error while creating Leads:", error);
+    return res.status(400).send({
+      success: false,
+      message: "Error while creating Leads",
+      error,
+    });
+  }
+};
+
 
 export const SignupUserType = async (req, res) => {
   try {
@@ -223,7 +276,7 @@ export const SignupUserType = async (req, res) => {
 
     if (lastUser) {
       // Convert lastOrder.orderId to a number before adding 1
-      const lastUserId = parseInt(lastUser.orderId);
+      const lastUserId = parseInt(lastUser.userId || 0);
       userId = lastUserId + 1;
     } else {
       userId = 1;
@@ -3562,7 +3615,7 @@ export const ViewOrderByUser = async (req, res) => {
 export const ViewAllZones = async (req, res) => {
   try {
     // Query the database for all ratings where status is 1
-    const Zones = await zonesModel.find({ status: "true" });
+    const Zones = await zonesModel.find({ status: 1 });
 
     res.status(200).json({ success: true, Zones });
   } catch (error) {

@@ -77,7 +77,8 @@ import {
   AdminCreateValetController, deleteValetAdmin,
 
   AddAdminLeadController,
-  getAllLeadsAdmin
+  getAllLeadsAdmin,
+  deleteLeadAdmin
 } from "../controller/adminController.js";
 import {
   SignupUserImage,
@@ -191,7 +192,8 @@ import {
   handleImageCompression,
   UpdateUserReviewOrder,
   UnAssignedDriverValet,
-  UserAllValtRides
+  UserAllValtRides,
+  // AddUserLeadController
 } from "../controller/userController.js";
 import authenticateToken from "../middleware/authMiddleware.js";
 import {
@@ -208,7 +210,7 @@ function checkOrigin(req, res, next) {
     "http://localhost:3000",
     "https://localhost:443",
     "https://localhost:80",
-    "https://taxi.delhiexpert.com",
+    "https://lead.delhiexpert.com",
     "https://localhost:5559",
   ]; // Add your authorized domains here
   const origin = req.headers.origin;
@@ -247,6 +249,7 @@ router.post("/api/find-distance/", findDistanceApi);
 
 router.post("/admin/add-leads", AddAdminLeadController);
 router.get("/admin/all-leads", getAllLeadsAdmin);
+router.delete("/admin/delete-lead/:id", deleteLeadAdmin);
 
 
 
@@ -394,6 +397,10 @@ router.post("/admin/import/allproducts/", importAllProAdmin);
 router.post("/admin/update-wallet", checkOrigin, AdminUpdateWallet);
 
 // --------------------    user routes start  -------------------//
+
+
+// router.post("/user/add-leads", AddUserLeadController);
+
 
 router.post("/signup-user-type", checkOrigin, SignupUserImage, SignupUserType);
 router.post(
