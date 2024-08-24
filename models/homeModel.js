@@ -62,7 +62,14 @@ const homeSchema = new mongoose.Schema(
             type: Number,
             default: 10
         },
-
+        TourDomesticCPC: {
+            type: Number,
+            default: 10
+        },
+        TourInternationalCPC: {
+            type: Number,
+            default: 10
+        },
 
     },
     { timestamps: true }

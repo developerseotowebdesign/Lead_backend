@@ -55,6 +55,9 @@ const LeadSchema = mongoose.Schema(
     type: {
       type: Number,
     },
+    typeRange: {
+      type: Number,
+    },
     status: {
       type: Number,
       default: 0,

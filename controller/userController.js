@@ -237,6 +237,119 @@ export const AddAdminLeadController = async (req, res) => {
   }
 };
 
+export const userAllLeadController = async (req, res) => {
+  try {
+    // Extract pagination parameters from the request query
+    const {
+      skip = 0,
+      limit = 50,
+      sortOrder,
+      status,
+      type,
+      searchTerm,
+    } = req.query;
+
+    // Convert skip and limit to integers
+    const skipNumber = parseInt(skip, 10);
+    const limitNumber = parseInt(limit, 10);
+
+
+    const query = {};
+    if (searchTerm) {
+      const regex = new RegExp(searchTerm, "i"); // Case-insensitive regex pattern for the search term
+
+      // Add regex pattern to search both username and email fields for the full name
+      query.$or = [
+        { PickupLocation: regex },
+        { DropLocation: regex },
+      ];
+
+      // if (!isNaN(Number(searchTerm))) {
+      //   query.$or.push({ phone: Number(searchTerm) });
+      // }
+      // if (!isNaN(Number(searchTerm))) {
+      //   query.$or.push({ LeadId: Number(searchTerm) });
+      // }
+    }
+
+
+
+
+
+    console.log('sortOrder', sortOrder);
+
+    if (status.length > 0) {
+      if (status === 'open') {
+        query.status = { $in: 0 }; // Use $in operator to match any of the values in the array
+      } else if (status === 'closed') {
+        query.status = { $in: 1 }; // Use $in operator to match any of the values in the array
+      }
+    }
+
+
+    if (type.length > 0) {
+      if (type === 'ride') {
+        query.type = { $in: 1 }; // Use $in operator to match any of the values in the array
+      } else if (type === 'tour') {
+        query.type = { $in: 0 }; // Use $in operator to match any of the values in the array
+      }
+    }
+
+
+    // // Add date range filtering to the query
+    // if (startDate && endDate) {
+    //   query.createdAt = { $gte: startDate, $lte: endDate };
+    // } else if (startDate) {
+    //   query.createdAt = { $gte: startDate };
+    // } else if (endDate) {
+    //   query.createdAt = { $lte: endDate };
+    // }
+
+    const sortOptions = {};
+
+
+    // Conditionally add price (CPC) sorting
+    if (sortOrder) {
+      if (sortOrder === 'highest') {
+        sortOptions["CPC"] = -1;  // Sort by CPC in descending order
+      } else if (sortOrder === 'lowest') {
+        sortOptions["CPC"] = 1;  // Sort by CPC in ascending order
+      } else if (sortOrder === 'latest') {
+        sortOptions["_id"] = -1;  // Sort by CPC in descending order
+      }
+      else if (sortOrder === 'old') {
+        sortOptions["_id"] = 1;  // Sort by CPC in descending order
+      }
+    }
+
+
+
+
+    console.log('sortOptions', sortOptions)
+
+    // Fetch leads with pagination
+    const leads = await LeadModel.find(query).sort(sortOptions).skip(skipNumber).limit(limitNumber);
+
+    // Fetch total count of leads for client-side pagination handling
+    const totalLeadsCount = await LeadModel.find(query).countDocuments();
+
+    return res.status(200).send({
+      success: true,
+      message: "Leads Found Successfully!",
+      data: {
+        leads,
+        totalCount: totalLeadsCount,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: `Error Occurred During Fetching Leads ${error}`,
+      success: false,
+      error,
+    });
+  }
+};
 
 export const SignupUserType = async (req, res) => {
   try {

@@ -193,6 +193,7 @@ import {
   UpdateUserReviewOrder,
   UnAssignedDriverValet,
   UserAllValtRides,
+  userAllLeadController
   // AddUserLeadController
 } from "../controller/userController.js";
 import authenticateToken from "../middleware/authMiddleware.js";
@@ -210,7 +211,7 @@ function checkOrigin(req, res, next) {
     "http://localhost:3000",
     "https://localhost:443",
     "https://localhost:80",
-    "https://lead.delhiexpert.com",
+    "https://lead.airblissservices.com",
     "https://localhost:5559",
   ]; // Add your authorized domains here
   const origin = req.headers.origin;
@@ -401,6 +402,7 @@ router.post("/admin/update-wallet", checkOrigin, AdminUpdateWallet);
 
 // router.post("/user/add-leads", AddUserLeadController);
 
+router.get("/user/all-leads", checkOrigin, userAllLeadController);
 
 router.post("/signup-user-type", checkOrigin, SignupUserImage, SignupUserType);
 router.post(

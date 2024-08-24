@@ -1522,11 +1522,11 @@ export const editHomeData = async (req, res) => {
       phone,
       email,
       address,
-      LeadsCount, LeadsCPC
+      LeadsCount, LeadsCPC, TourDomesticCPC, TourInternationalCPC
 
     } = req.body;
 
-    console.log(meta_favicon)
+    console.log(TourDomesticCPC, TourInternationalCPC)
     let updateFields = {
       meta_title,
       meta_description,
@@ -1540,7 +1540,7 @@ export const editHomeData = async (req, res) => {
       email,
       address,
       LeadsCount,
-      LeadsCPC
+      LeadsCPC, TourDomesticCPC, TourInternationalCPC
     };
 
     const homeData = await homeModel.findOneAndUpdate({}, updateFields, {
@@ -2815,7 +2815,7 @@ export const deleteFolderAdmin = async (req, res) => {
 
 export const AddAdminLeadController = async (req, res) => {
   try {
-    const { PickupLocation, DropLocation, startDate, endDate, count, name, email, phone, CPC, type } = req.body;
+    const { PickupLocation, DropLocation, startDate, endDate, count, name, email, phone, CPC, type, typeRange } = req.body;
 
     // Validation
     if (!PickupLocation || !DropLocation || !startDate || !endDate || !count || !name || !email || !phone || !CPC || !type) {
@@ -2844,7 +2844,7 @@ export const AddAdminLeadController = async (req, res) => {
       startDate,
       endDate,
       count,
-      LeadId, name, email, phone, CPC, type
+      LeadId, name, email, phone, CPC, type, typeRange
     });
     await newLead.save();
 
